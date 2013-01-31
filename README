@@ -1,0 +1,6 @@
+CenterHatch is my modular web application framework. It uses the MVC architechture and the front controller pattern.
+Aside from including the basic setup I need for a PHP project, along with a build command for the sql structure, it also includes basic stylings, images
+and fonts.
+The framework can be easily extended using the modules by simply creating a module in the modules folder and adding it to the database.
+The framework includes ways to manage modules and pages from an online interface
+The framework will try to initiate a database connection and if no tables are found in the database (or the wrong tables) it will run a script to create them from the sql dump in the sql folder.
