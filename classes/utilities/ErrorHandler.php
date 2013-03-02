@@ -16,6 +16,7 @@
  * Handles errors and exceptions
  *
  * @author Sunnefa Lind
+ * @incomplete See todo notes
  */
 class ErrorHandler {
     
@@ -73,20 +74,16 @@ class ErrorHandler {
      * @param string $message
      * @param string $file
      * @param int $line
-     * @todo Make it so that if the error is of a specific type it does not die, only gets logged silently or printed
      */
     public function handle_error($type,$message,$file,$line) {
-        $this->error_file = $file;
-        $this->error_line = $line;
-        $this->error_message = $message;
-        $this->error_type = $type;
-        
-        self::death($this->construct_error_message());
+        $e = new ErrorException($message, $type, 0, $file, $line);
+        $this->handle_exception($e);
     }
     
     /**
      * Handles uncaught exceptions
      * @param Exception $exception
+     * @todo: Add support for different error types
      */
     public function handle_exception(Exception $exception) {
         $this->error_file = $exception->getFile();
@@ -104,11 +101,8 @@ class ErrorHandler {
         $error = error_get_last();
         if($error) {
             extract($error);
-            $this->error_file = $file;
-            $this->error_line = $line;
-            $this->error_message = $message;
-            $this->error_type = $type;
-            self::death($this->construct_error_message());
+            $e = new ErrorException($message, $type, 0, $file, $line);
+            $this->handle_exception($e);
         }
     }
     
@@ -118,13 +112,15 @@ class ErrorHandler {
      */
     private function construct_error_message() {
         $error_type = $this->resolve_error_type($this->error_type);
-        $error_date = date("d:m:Y, h:iA");
+        $error_date = date("d.m.Y, h:iA");
+        
+        $error_file = (defined(ROOT)) ? str_replace(ROOT, '', $this->error_file) : $this->error_file;
         
         $error_message = <<<EOT
 /**
  * $error_type error occurred at $error_date
  * Message returned: $this->error_message
- * Error occurred in $this->error_file on line $this->error_line
+ * Error occurred in $error_file on line $this->error_line
  */
 EOT;
         
@@ -136,6 +132,7 @@ EOT;
      * Resolves the numerical representation of an error type into a string
      * @param int $type
      * @return string
+     * @todo: Add exception types in here as well
      */
     private function resolve_error_type($type) {
         switch($type) {
@@ -191,15 +188,18 @@ EOT;
     
     /**
      * Writes the given error message to a log file
+     * @param string $error_message
+     * @todo Write error messages to a log file
      */
-    private static function log_error() {
-        
+    private static function log_error($error_message) {
+        echo 'Logging error';
     }
     
     /**
      * Alternative to die() wherein we can have better control over what happens such as logging, error output, style etc.
      * @param string $error_message
      * @param boolean $database_error
+     * @todo Show a template or something like that
      */
     public static function death($error_message, $database_error = false) {
         @ob_end_clean();
@@ -208,6 +208,7 @@ EOT;
         } else {
             echo 'There was an error';
         }
+        exit;
     }
 }
 
