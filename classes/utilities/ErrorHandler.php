@@ -61,11 +61,19 @@ class ErrorHandler {
     }
     
     /**
-     * Activate or deactivate debug mode
+     * Activate debug mode
      */
-    public function set_debug_mode() {
+    public function activate_debug_mode() {
         self::$debug_mode = true;
         error_reporting(E_ALL|E_STRICT);
+    }
+    
+    /**
+     * Deactivate debug mode
+     */
+    public function deactivate_debug_mode() {
+        self::$debug_mode = false;
+        error_reporting(0);
     }
     
     /**
@@ -189,10 +197,16 @@ EOT;
     /**
      * Writes the given error message to a log file
      * @param string $error_message
-     * @todo Write error messages to a log file
      */
     private static function log_error($error_message) {
-        echo 'Logging error';
+        if(function_exists("error_log")) {
+            error_log($error_message, 3, ROOT . 'logs/error_log.txt');
+        } elseif(!is_file(ROOT . 'logs/error_log.txt')) {
+            file_put_contents(ROOT . 'logs/error_log.txt', $error_message);
+        } else {
+            $contents = file_get_contents(ROOT . 'logs/error_log.txt');
+            file_put_contents(ROOT . 'logs/error_log.txt', $contents . $error_message);
+        }
     }
     
     /**
@@ -203,9 +217,12 @@ EOT;
      */
     public static function death($error_message, $database_error = false) {
         @ob_end_clean();
+        self::log_error($error_message);
         if(self::$debug_mode === true) {
+            //here we want to show the style of the site, but still print out the error message
             echo $error_message . '<br />';
         } else {
+            //here we want to show an error page with a message saying the page was not found or something like that
             echo 'There was an error';
         }
         exit;
