@@ -36,7 +36,7 @@ $error_handler = new ErrorHandler();
  * Get an instance of the MySQLWrapper object
  */
 try {
-    $sql = MySQLWrapper::get_instance();
+    $sql = new MySQLWrapper(DBUSER, DBHOST, DBPASS, DBNAME);
 } catch(mysqli_sql_exception $e) {
     ErrorHandler::death("Database connection error: " . $e->getMessage(), true);
 }
