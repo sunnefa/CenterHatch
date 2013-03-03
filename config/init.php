@@ -48,6 +48,6 @@ try {
 }
 
 if($settings->debug_mode == 1) {
-    $error_handler->set_debug_mode();
+    $error_handler->activate_debug_mode();
 }
 ?>
