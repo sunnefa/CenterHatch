@@ -38,6 +38,7 @@ $error_handler = new ErrorHandler();
 try {
     $sql = new MySQLWrapper(DBUSER, DBHOST, DBPASS, DBNAME);
 } catch(mysqli_sql_exception $e) {
+    //@todo: Installation?
     ErrorHandler::death("Database connection error: " . $e->getMessage(), true);
 }
 
