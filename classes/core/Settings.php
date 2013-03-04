@@ -7,6 +7,8 @@
  *  are added but not used anywhere do not do a lot of harm, except take up space in the database, but care should
  *  be taken not to add setting records idly and if it turns out they are not needed they can always be deleted through
  *  PhpMyAdmin or other such similar interfaces.
+ *  Note: when creating the management module for the settings, use get_object_vars to get an array of all the settings
+ *  in the database.
  * 
  * @filename classes/core/Settings.php
  * @package Core models
@@ -20,7 +22,6 @@
  * Represents the settings table
  *
  * @author Sunnefa Lind
- * @incomplete See @todo's
  */
 class Settings {
     /**
@@ -69,10 +70,19 @@ class Settings {
      * @param string $setting_value
      * @return boolean
      * @throws Exception
-     * @todo Implement
+     * @throws InvalidArgumentException
      */
     public function add_setting($setting_name, $setting_value) {
-        
+        if(!is_string($setting_name) || !is_string($setting_value)) {
+            throw new InvalidArgumentException('$setting_name and $setting_value in Settings::add_setting must both be strings');
+        } else {
+            $result = $this->db_wrapper->insert($this->table_name, 
+                    array('setting_name', 'setting_value'), 
+                    array($setting_name, $setting_value));
+            
+            if(!$result) throw new Exception('Could not add records to ' . $this->table_name . ' table in Settings::add_setting');
+            else return true;
+        }
     }
     
     /**
@@ -81,10 +91,20 @@ class Settings {
      * @param string $setting_value
      * @return boolean
      * @throws Exception
-     * @todo Implement
+     * @throws InvalidArgumentException
      */
     public function update_setting($setting_name, $setting_value) {
-        
+        if(!is_string($setting_name) || !is_string($setting_value)) {
+            throw new InvalidArgumentException('$setting_name and $setting_value in Settings:update_setting must both be strings');
+        } else {
+            $result = $this->db_wrapper->update($this->table_name, 
+                    array('setting_value'), 
+                    array($setting_value), 
+                    "setting_name = '$setting_name'");
+            
+            if(!$result) throw new Exception('Could not update records in ' . $this->table_name . ' table in Settings::update_setting');
+            else return true;
+        }
     }
 }
 
