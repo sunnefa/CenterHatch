@@ -180,7 +180,13 @@ class MySQLWrapper extends DBWrapper {
 
         $sql = 'UPDATE ' . $table . ' SET ' . $field_value_string . ' WHERE ' . $where;
         
-        return $this->execute_query($sql);
+        $this->execute_query($sql);
+        
+        if(mysqli_affected_rows($this->db_conn) > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
     
     /**
