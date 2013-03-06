@@ -78,7 +78,13 @@ class MySQLWrapper extends DBWrapper {
     public function delete($table, $where) {
         $sql = "DELETE FROM " . $table . " WHERE " . $where;
         
-        return $this->execute_query($sql);
+        $this->execute_query($sql);
+        
+        if(mysqli_affected_rows($this->db_conn) > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
     
     /**
@@ -98,8 +104,9 @@ class MySQLWrapper extends DBWrapper {
         
         $sql = 'INSERT INTO ' . $table . ' (' . $field_string . ") VALUES ('" . $value_string . "')";
         
-        return $this->execute_query($sql);
+        $this->execute_query($sql);
         
+        return mysqli_insert_id($this->db_conn);
     }
     
     /**
