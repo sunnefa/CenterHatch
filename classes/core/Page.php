@@ -387,6 +387,22 @@ class Page {
             }
         }
     }
+    
+    /**
+     * Removes the all page-module relationships by module (used if the module is being deleted)
+     * @param int $module_id
+     * @return boolean
+     * @throws InvalidArgumentException
+     */
+    public function remove_module_from_all_pages($module_id) {
+        if(!is_numeric($module_id)) {
+            throw new InvalidArgumentException('$module_id in Page::remove_module_from_all_pages must be a number');
+        } else {
+            $deleted = $this->db_wrapper->delete('core__pages_modules', 'module_id = ' . $module_id);
+            if($deleted) return true;
+            else return false;
+        }
+    }
 }
 
 ?>
