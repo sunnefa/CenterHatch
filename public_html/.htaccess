@@ -1,0 +1,10 @@
+SetEnv REWRITE_BASE /CenterHatch/public_html/
+Options +FollowSymLinks  
+RewriteEngine On  
+
+RewriteBase /CenterHatch/public_html/
+
+RewriteCond %{SCRIPT_FILENAME} !-d  
+RewriteCond %{SCRIPT_FILENAME} !-f  
+
+RewriteRule ^.*?$ ./index.php  
