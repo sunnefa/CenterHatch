@@ -46,6 +46,14 @@ class Functions {
         print_r($array);
         echo '</pre>';
     }
+    
+    /**
+     * Returns an array of the query strings passed through the pretty urls
+     * @return array
+     */
+    public static function query_strings() {
+        return explode('/', str_replace($_SERVER['REWRITE_BASE'], '', $_SERVER['REQUEST_URI']));
+    }
 }
 
 ?>
