@@ -289,9 +289,9 @@ class Page {
         if(!is_numeric($page_id)) {
             throw new InvalidArgumentException('$page_id in Page::delete_page must be a number');
         } else {
+            $this->remove_all_modules_from_page($page_id);
             $deleted = $this->db_wrapper->delete($this->table_name, 'page_id = ' . $page_id);
             if($deleted) {
-                $this->remove_all_modules_from_page($page_id);
                 return true;
             } else {
                 return false;
