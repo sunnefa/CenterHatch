@@ -171,7 +171,7 @@ class Page {
         if(!is_numeric($page_id)) {
             throw new InvalidArgumentException('$page_id in Page::load_modules must be a number');
         } else {
-            $results = $this->db_wrapper->select('core__pages_modules', 'module_id, display_order', 'page_id = ' . $page_id);
+            $results = $this->db_wrapper->select('core__pages_modules', 'module_id, display_order', 'page_id = ' . $page_id, null, 'display_order');
             
             if(!$results) {
                 throw new Exception('No modules were found for a page with the id ' . $page_id . ' in Pages::load_modules');
